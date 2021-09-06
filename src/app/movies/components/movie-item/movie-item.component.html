@@ -1,0 +1,65 @@
+<div class="card mb-4">
+  <div class="card-body">
+    <h5 class="card-title fw-bold">
+      {{ movie.title }}
+      <h6 class="movie-year fw-normal">({{ movie.year }})</h6>
+    </h5>
+    <h6 class="card-subtitle mb-2 text-muted">{{ movie.genre }}</h6>
+    <hr />
+    <div class="row g-0 mb-4">
+      <img
+        src="{{ movie.poster }}"
+        class="col-4 h-100 pe-4"
+        alt="movie poster"
+      />
+      <div class="col-8 card-text">{{ movie.plot }}</div>
+    </div>
+    <ng-container *ngIf="editable">
+      <ng-container
+        *ngIf="!commentSaved; then editableContent; else readonlyComment"
+      ></ng-container>
+      <ng-template #editableContent>
+        <textarea
+          [(ngModel)]="movieComment"
+          class="mb-1 w-100"
+          placeholder="Comment"
+          #comment
+        ></textarea>
+        <div
+          [style.color]="movieComment.trim().length === 0 ? 'darkred' : 'darkgreen'"
+        >
+        {{ wordCount(comment.value) }} words
+        </div>
+      </ng-template>
+      <ng-template #readonlyComment>
+        <label class="fw-bold"> Comment: </label>
+        <p>{{ movieComment }}</p>
+      </ng-template>
+      <hr />
+      <button
+        (click)="saveComment()"
+        [disabled]="movieComment.trim().length === 0"
+        class="btn btn-outline-success me-2"
+      >
+        <i class="fas" [ngClass]="commentSaved ? 'fa-pencil-alt' : 'fa-check'"></i>
+        {{ commentSaved ? "Edit" : "Save" }} comment
+      </button>
+      <button
+        (click)="clearComment()"
+        [disabled]="movieComment === ''"
+        class="btn btn-outline-warning me-2"
+      >
+        <i class="fas fa-ban"></i>
+        Clear comment
+      </button>
+      <a [routerLink]="['/movies', movie.id]" class="btn btn-primary me-2">
+        <i class="fas fa-edit"></i>
+        Edit
+      </a>
+      <button (click)="movieDelete.emit(movie.id)" class="btn btn-danger me-2">
+        <i class="fas fa-trash"></i>
+        Delete
+      </button>
+    </ng-container>
+  </div>
+</div>
