@@ -7,6 +7,7 @@ import { MovieItemComponent } from './components/movie-item/movie-item.component
 import { MovieListComponent } from './components/movie-list/movie-list.component';
 import { MovieDetailComponent } from '../movies/components/movie-detail/movie-detail.component';
 import { MovieListStaticComponent } from './components/movie-list-static/movie-list-static.component';
+import { RatingComponent } from './components/rating/rating.component';
 
 @NgModule({
   imports: [
@@ -25,6 +26,7 @@ import { MovieListStaticComponent } from './components/movie-list-static/movie-l
     MovieListComponent,
     MovieListStaticComponent,
     MovieDetailComponent,
+    RatingComponent,
   ],
 })
 export class MoviesModule {}

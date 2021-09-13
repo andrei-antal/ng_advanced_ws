@@ -26,6 +26,7 @@ export class MovieItemComponent implements OnChanges {
 
   public commentSaved: boolean;
   public movieComment: string;
+  public movieRating = 1;
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.movie) {

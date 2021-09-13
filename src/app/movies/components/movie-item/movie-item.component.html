@@ -35,6 +35,10 @@
         <label class="fw-bold"> Comment: </label>
         <p>{{ movieComment }}</p>
       </ng-template>
+      <div class="mt-2">
+        <p class="fw-bold">Rating:</p>
+        <ngi-rating [(rating)]="movieRating"></ngi-rating>
+      </div>
       <hr />
       <button
         (click)="saveComment()"
