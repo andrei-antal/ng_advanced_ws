@@ -12,7 +12,9 @@ import { EMPTY_MOVIE, Movie } from '../model/movie';
 })
 export class MovieService {
   private movies: Subject<Movie[]> = new Subject();
-  private apiUrl = 'http://localhost:3000/movies';
+  private apiAddress = 'http://localhost:3000';
+  private moviesApiUrl = `${this.apiAddress}/movies`;
+  private genreApiUrl = `${this.apiAddress}/genres`;
   public readonly movies$: Observable<Movie[]> = this.movies.asObservable();
 
   constructor(private http: HttpClient) {}
@@ -24,32 +26,36 @@ export class MovieService {
         id: uuid(),
       });
     }
-    return this.http.get<Movie>(`${this.apiUrl}/${movieId}`);
+    return this.http.get<Movie>(`${this.moviesApiUrl}/${movieId}`);
   }
 
   getMovies(searchTerm = ''): void {
     this.http
-      .get<Movie[]>(`${this.apiUrl}?q=${searchTerm.trim()}`)
+      .get<Movie[]>(`${this.moviesApiUrl}?q=${searchTerm.trim()}`)
       .subscribe((data) => this.movies.next(data));
   }
 
   updateComment(movieId: string, newComment: string): Observable<Movie> {
     return this.http
-      .patch<Movie>(`${this.apiUrl}/${movieId}`, { comment: newComment })
+      .patch<Movie>(`${this.moviesApiUrl}/${movieId}`, { comment: newComment })
       .pipe(tap(() => this.getMovies()));
   }
 
   deleteMovie(movieId: string): Observable<any> {
     return this.http
-      .delete(`${this.apiUrl}/${movieId}`)
+      .delete(`${this.moviesApiUrl}/${movieId}`)
       .pipe(tap(() => this.getMovies()));
   }
 
   createMovie(movie: Movie) {
-    return this.http.post(`${this.apiUrl}`, movie);
+    return this.http.post(`${this.moviesApiUrl}`, movie);
   }
 
   updateMovie(movie: Movie) {
-    return this.http.put(`${this.apiUrl}/${movie.id}`, movie);
+    return this.http.put(`${this.moviesApiUrl}/${movie.id}`, movie);
+  }
+
+  getGenres(): Observable<string[]> {
+    return this.http.get<string[]>(this.genreApiUrl);
   }
 }

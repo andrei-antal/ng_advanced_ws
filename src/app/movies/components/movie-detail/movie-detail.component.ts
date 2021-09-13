@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { map, tap, switchMap } from 'rxjs/operators';
 
 import { MovieService } from '../../services/movie.service';
-import { genreValidator } from '../../services/movies-validators.service';
+import { MovieGenreAsyncValidator } from '../../services/movies-validators.service';
 import { Movie } from '../../model/movie';
 
 @Component({
@@ -16,7 +16,11 @@ import { Movie } from '../../model/movie';
 export class MovieDetailComponent implements OnInit {
   public movieForm: FormGroup = this.fb.group({
     title: this.fb.control('', Validators.required),
-    genre: this.fb.control('', [Validators.required, genreValidator]),
+    genre: this.fb.control('', {
+      updateOn: 'blur',
+      validators: Validators.required,
+      asyncValidators: this.movieValidator.validateGenreAsync,
+    }),
     year: this.fb.control('', Validators.required),
     plot: this.fb.control('', Validators.required),
     poster: this.fb.control(''),
@@ -28,7 +32,8 @@ export class MovieDetailComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private movieService: MovieService
+    private movieService: MovieService,
+    private movieValidator: MovieGenreAsyncValidator
   ) {}
 
   ngOnInit(): void {

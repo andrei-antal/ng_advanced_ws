@@ -1,4 +1,10 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Injectable } from '@angular/core';
+
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import { MovieService } from './movie.service';
 
 export const GENRES = [
   'action',
@@ -31,3 +37,26 @@ export const genreValidator: ValidatorFn = (
 
   return isValidGenreList ? null : { wrongGenre: true };
 };
+
+@Injectable({ providedIn: 'root' })
+export class MovieGenreAsyncValidator {
+  constructor(private movieService: MovieService) {}
+
+  public validateGenreAsync = (
+    formControl: AbstractControl
+  ): Observable<ValidationErrors | null> => {
+    return this.movieService.getGenres().pipe(
+      map((genresList) => {
+        const movieGenres: string[] =
+          formControl.value &&
+          formControl.value.split(',').map((g: string) => g.trim());
+        return movieGenres &&
+          movieGenres.reduce((acc, curr) => {
+            return acc && genresList.includes(curr.toLowerCase());
+          }, true)
+          ? null
+          : { wrongGenre: true };
+      })
+    );
+  };
+}
