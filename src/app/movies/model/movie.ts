@@ -50,3 +50,12 @@ export const MOVIES_LIST: Movie[] = [
     comment: '',
   },
 ];
+
+export const EMPTY_MOVIE: Omit<Movie, 'id'> = {
+  title: '',
+  genre: '',
+  plot: '',
+  year: '',
+  comment: '',
+  poster: '',
+};

@@ -1,31 +1,62 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { Observable } from 'rxjs';
-import { map, switchMap, filter } from 'rxjs/operators';
+import { map, tap, switchMap } from 'rxjs/operators';
 
-import { Movie } from '../../model/movie';
 import { MovieService } from '../../services/movie.service';
+import { Movie } from '../../model/movie';
 
 @Component({
-  selector: 'ngm-movie-detail',
+  selector: 'ngi-movie-detail',
   templateUrl: './movie-detail.component.html',
   styleUrls: ['./movie-detail.component.scss'],
 })
 export class MovieDetailComponent implements OnInit {
-  public movie$: Observable<Movie>;
+  public movieForm: FormGroup = this.fb.group({
+    title: this.fb.control(''),
+    genre: this.fb.control(''),
+    year: this.fb.control(''),
+    plot: this.fb.control(''),
+    poster: this.fb.control(''),
+  });
+  public movieId: string | null;
+  private movie: Movie;
 
   constructor(
+    private fb: FormBuilder,
     private route: ActivatedRoute,
+    private router: Router,
     private movieService: MovieService
   ) {}
 
   ngOnInit(): void {
-    this.movie$ = this.route.paramMap.pipe(
-      map((paramsMap) => paramsMap.get('id')),
-      filter((id) => !!id),
-      map((id) => id as string),
-      switchMap((movieId) => this.movieService.getMovie(movieId))
-    );
+    this.route.paramMap
+      .pipe(
+        map((paramsMap) => paramsMap.get('id')),
+        tap((movieId) => (this.movieId = movieId)),
+        switchMap((movieId) => this.movieService.getMovie(movieId))
+      )
+      .subscribe((movie) => {
+        this.movie = movie;
+        this.movieForm.patchValue(movie);
+      });
   }
+
+  onSubmit() {
+    const { value } = this.movieForm;
+    const modifiedMovie = {
+      ...this.movie,
+      ...value,
+    };
+    if (!this.movieId) {
+      this.movieService.createMovie(modifiedMovie).subscribe(this.goBack);
+    } else {
+      this.movieService.updateMovie(modifiedMovie).subscribe(this.goBack);
+    }
+  }
+
+  goBack = () => {
+    this.router.navigate(['/movies']);
+  };
 }

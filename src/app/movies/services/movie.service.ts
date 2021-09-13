@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+import { v4 as uuid } from 'uuid';
+
+import { Observable, of, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { Movie } from '../model/movie';
+import { EMPTY_MOVIE, Movie } from '../model/movie';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +17,13 @@ export class MovieService {
 
   constructor(private http: HttpClient) {}
 
-  getMovie(movieId: string): Observable<Movie> {
+  getMovie(movieId?: string | null): Observable<Movie> {
+    if (!movieId) {
+      return of({
+        ...EMPTY_MOVIE,
+        id: uuid(),
+      });
+    }
     return this.http.get<Movie>(`${this.apiUrl}/${movieId}`);
   }
 
@@ -35,5 +43,13 @@ export class MovieService {
     return this.http
       .delete(`${this.apiUrl}/${movieId}`)
       .pipe(tap(() => this.getMovies()));
+  }
+
+  createMovie(movie: Movie) {
+    return this.http.post(`${this.apiUrl}`, movie);
+  }
+
+  updateMovie(movie: Movie) {
+    return this.http.put(`${this.apiUrl}/${movie.id}`, movie);
   }
 }
