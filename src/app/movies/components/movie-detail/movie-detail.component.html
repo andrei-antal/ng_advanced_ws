@@ -12,9 +12,18 @@
         </div>
         <div class="form-group mb-2">
           <label for="movieGenre">Genre</label>
-          <input name="genre" class="form-control" id="movieGenre" placeholder="Enter genre" formControlName="genre">
-          <div class="invalid-feedback" *ngIf="movieForm.controls.genre.errors?.required && movieForm.controls.genre.dirty">Genre required</div>
-          <div class="invalid-feedback" *ngIf="movieForm.controls.genre.errors?.wrongGenre && movieForm.controls.genre.dirty">Not a genre category</div>
+          <div formArrayName="genre" class="mb-2" *ngFor="let genreCtrl of genreCtrls.controls; index as i">
+            <select class="form-select w-50 d-inline me-2" [formControlName]="i">
+              <option disabled value="">Choose a new genre</option>
+              <option *ngFor="let genre of genres" [ngValue]="genre">
+                {{genre}}
+              </option>
+            </select>
+            <i class="far fa-times-circle" role="button" (click)="removeGenre(i)"></i>
+          </div>
+          <br>
+          <a class="btn btn-dark btn-sm" (click)="addGenre()">Add genre</a>
+          <div class="invalid-feedback" *ngIf="genreCtrls.errors?.wrongGenre && genreCtrls.dirty">Genre required</div>
         </div>
         <div class="form-group mb-2">
           <label for="movieYear">Year</label>

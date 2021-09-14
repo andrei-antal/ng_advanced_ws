@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { map, tap, switchMap } from 'rxjs/operators';
 
 import { MovieService } from '../../services/movie.service';
 import {
-  MovieGenreAsyncValidator,
+  GENRES,
+  genreValidator,
   sciFiGenreYearValidator,
 } from '../../services/movies-validators.service';
 import { Movie } from '../../model/movie';
@@ -20,10 +21,9 @@ export class MovieDetailComponent implements OnInit {
   public movieForm: FormGroup = this.fb.group(
     {
       title: this.fb.control('', Validators.required),
-      genre: this.fb.control('', {
-        updateOn: 'blur',
-        validators: Validators.required,
-        asyncValidators: this.movieValidator.validateGenreAsync,
+      genre: this.fb.array([], {
+        validators: genreValidator,
+        updateOn: 'change',
       }),
       year: this.fb.control('', Validators.required),
       plot: this.fb.control('', Validators.required),
@@ -32,14 +32,18 @@ export class MovieDetailComponent implements OnInit {
     { validators: sciFiGenreYearValidator, updateOn: 'blur' }
   );
   public movieId: string | null;
+  public genres = GENRES;
   private movie: Movie;
+
+  get genreCtrls(): FormArray {
+    return this.movieForm.get('genre') as FormArray;
+  }
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private movieService: MovieService,
-    private movieValidator: MovieGenreAsyncValidator
+    private movieService: MovieService
   ) {}
 
   ngOnInit(): void {
@@ -51,7 +55,9 @@ export class MovieDetailComponent implements OnInit {
       )
       .subscribe((movie) => {
         this.movie = movie;
-        this.movieForm.patchValue(movie);
+        const genre = movie.genre.split(',').map((g) => g.trim().toLowerCase());
+        genre.forEach(() => this.addGenre());
+        this.movieForm.patchValue({ ...movie, genre });
       });
   }
 
@@ -60,6 +66,7 @@ export class MovieDetailComponent implements OnInit {
     const modifiedMovie = {
       ...this.movie,
       ...value,
+      genre: value.genre.filter((g: string) => g).join(', '),
     };
     if (!this.movieId) {
       this.movieService.createMovie(modifiedMovie).subscribe(this.goBack);
@@ -71,4 +78,12 @@ export class MovieDetailComponent implements OnInit {
   goBack = () => {
     this.router.navigate(['/movies']);
   };
+
+  public addGenre(): void {
+    this.genreCtrls.push(this.fb.control(''));
+  }
+
+  public removeGenre(index: number): void {
+    this.genreCtrls.removeAt(index);
+  }
 }

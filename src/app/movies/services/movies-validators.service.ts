@@ -26,12 +26,13 @@ export const GENRES = [
 export const genreValidator: ValidatorFn = (
   ctrl: AbstractControl
 ): ValidationErrors | null => {
-  const movieGenres: string[] =
-    ctrl.value && ctrl.value.split(',').map((genre: string) => genre.trim());
+  if (!ctrl.value || !ctrl.value.join()) {
+    return { wrongGenre: true };
+  }
 
-  const isValidGenreList =
-    movieGenres &&
-    movieGenres.reduce((acc, curr) => {
+  const isValidGenreList = ctrl.value
+    .filter((g: string) => g)
+    .reduce((acc: boolean, curr: string) => {
       return acc && GENRES.includes(curr.toLowerCase());
     }, true);
 
@@ -46,8 +47,7 @@ export const sciFiGenreYearValidator: ValidatorFn = (
   if (!genreCtrl || !yearCtrl) {
     return null;
   }
-  const hasSciFi = (genreCtrl.value as string)
-    .split(',')
+  const hasSciFi = (genreCtrl.value as string[])
     .map((g) => g.trim().toLowerCase())
     .includes('sci-fi');
 
