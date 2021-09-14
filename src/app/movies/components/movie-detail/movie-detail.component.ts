@@ -5,7 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { map, tap, switchMap } from 'rxjs/operators';
 
 import { MovieService } from '../../services/movie.service';
-import { MovieGenreAsyncValidator } from '../../services/movies-validators.service';
+import {
+  MovieGenreAsyncValidator,
+  sciFiGenreYearValidator,
+} from '../../services/movies-validators.service';
 import { Movie } from '../../model/movie';
 
 @Component({
@@ -14,17 +17,20 @@ import { Movie } from '../../model/movie';
   styleUrls: ['./movie-detail.component.scss'],
 })
 export class MovieDetailComponent implements OnInit {
-  public movieForm: FormGroup = this.fb.group({
-    title: this.fb.control('', Validators.required),
-    genre: this.fb.control('', {
-      updateOn: 'blur',
-      validators: Validators.required,
-      asyncValidators: this.movieValidator.validateGenreAsync,
-    }),
-    year: this.fb.control('', Validators.required),
-    plot: this.fb.control('', Validators.required),
-    poster: this.fb.control(''),
-  });
+  public movieForm: FormGroup = this.fb.group(
+    {
+      title: this.fb.control('', Validators.required),
+      genre: this.fb.control('', {
+        updateOn: 'blur',
+        validators: Validators.required,
+        asyncValidators: this.movieValidator.validateGenreAsync,
+      }),
+      year: this.fb.control('', Validators.required),
+      plot: this.fb.control('', Validators.required),
+      poster: this.fb.control(''),
+    },
+    { validators: sciFiGenreYearValidator, updateOn: 'blur' }
+  );
   public movieId: string | null;
   private movie: Movie;
 

@@ -18,7 +18,7 @@ export const GENRES = [
   'mystery',
   'romance',
   'satire',
-  'science fiction',
+  'sci-fi',
   'thriller',
   'western',
 ];
@@ -36,6 +36,24 @@ export const genreValidator: ValidatorFn = (
     }, true);
 
   return isValidGenreList ? null : { wrongGenre: true };
+};
+
+export const sciFiGenreYearValidator: ValidatorFn = (
+  ctrl: AbstractControl
+): ValidationErrors | null => {
+  const genreCtrl = ctrl.get('genre');
+  const yearCtrl = ctrl.get('year');
+  if (!genreCtrl || !yearCtrl) {
+    return null;
+  }
+  const hasSciFi = (genreCtrl.value as string)
+    .split(',')
+    .map((g) => g.trim().toLowerCase())
+    .includes('sci-fi');
+
+  return hasSciFi && parseInt(yearCtrl.value, 10) < 1902
+    ? { wrongSciFiYear: true }
+    : null;
 };
 
 @Injectable({ providedIn: 'root' })
