@@ -47,7 +47,8 @@ export const sciFiGenreYearValidator: ValidatorFn = (
   if (!genreCtrl || !yearCtrl) {
     return null;
   }
-  const hasSciFi = (genreCtrl.value as string[])
+  const hasSciFi = (genreCtrl.value as string)
+    .split(',')
     .map((g) => g.trim().toLowerCase())
     .includes('sci-fi');
 

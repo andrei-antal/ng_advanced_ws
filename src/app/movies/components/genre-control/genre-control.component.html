@@ -1,0 +1,10 @@
+<span
+  class="badge bg-primary me-2"
+  [class.bg-primary]="genre.value"
+  [class.bg-light]="!genre.value"
+  [class.text-dark]="!genre.value"
+  *ngFor="let genre of genres| keyvalue"
+  (click)="toggleGenre(genre.key)"
+>
+  {{genre.key}}
+</span>
