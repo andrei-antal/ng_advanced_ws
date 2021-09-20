@@ -1,7 +1,7 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable, fromEvent } from 'rxjs';
-import { debounceTime, startWith } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { debounceTime, startWith, switchMap } from 'rxjs/operators';
 
 import { Movie } from '../../model/movie';
 import { CommentUpdate } from '../movie-item/movie-item.component';
@@ -11,17 +11,18 @@ import { MovieService } from '../../services/movie.service';
   templateUrl: './movie-list.component.html',
   styleUrls: ['./movie-list.component.scss'],
 })
-export class MovieListComponent implements AfterViewInit {
+export class MovieListComponent implements OnInit {
   public movies$: Observable<Movie[]>;
   public searchField = new FormControl('');
 
   constructor(public movieService: MovieService) {}
 
-  public ngAfterViewInit(): void {
-    this.movies$ = this.movieService.movies$;
-    this.searchField.valueChanges
-      .pipe(debounceTime(300), startWith(''))
-      .subscribe((searchTerm) => this.movieService.getMovies(searchTerm));
+  public ngOnInit(): void {
+    this.movies$ = this.searchField.valueChanges.pipe(
+      debounceTime(300),
+      startWith(undefined),
+      switchMap((searchTerm) => this.movieService.getMovies(searchTerm))
+    );
   }
 
   public handleCommentUpdate(commentPayload: CommentUpdate): void {
