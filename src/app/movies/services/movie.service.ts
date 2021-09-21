@@ -13,7 +13,7 @@ const REFRESH_INTERVAL = 10000;
   providedIn: 'root',
 })
 export class MovieService {
-  private apiAddress = 'http://localhost:3000';
+  public apiAddress = 'http://localhost:3000';
   private moviesApiUrl = `${this.apiAddress}/movies`;
   private genreApiUrl = `${this.apiAddress}/genres`;
   private cache$: Observable<Movie[]>;
