@@ -9,6 +9,7 @@ import { MovieDetailComponent } from '../movies/components/movie-detail/movie-de
 import { MovieListStaticComponent } from './components/movie-list-static/movie-list-static.component';
 import { RatingComponent } from './components/rating/rating.component';
 import { GenreControlComponent } from './components/genre-control/genre-control.component';
+import { WordCountPipe } from './pipes/word-count.pipe';
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import { GenreControlComponent } from './components/genre-control/genre-control.
     MovieDetailComponent,
     RatingComponent,
     GenreControlComponent,
+    WordCountPipe,
   ],
 })
 export class MoviesModule {}
