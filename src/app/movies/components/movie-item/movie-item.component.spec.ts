@@ -78,7 +78,7 @@ describe('MovieItemComponent', () => {
 
     fixture.detectChanges();
 
-    spyOn(component, 'update');
+    jest.spyOn(component, 'update');
 
     // Act
     clearCommentBtn.click();
@@ -100,7 +100,7 @@ describe('MovieItemComponent', () => {
       By.css('[data-testId=comment]')
     ).nativeElement;
 
-    spyOn(component, 'update');
+    jest.spyOn(component, 'update');
 
     commentElement.value = 'Comment';
     commentElement.dispatchEvent(new Event('input'));

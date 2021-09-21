@@ -1,3 +1,4 @@
+import { MovieItemComponent } from './../movie-item/movie-item.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   HttpClientTestingModule,
@@ -7,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { MovieListComponent } from './movie-list.component';
 import { MovieService } from '../../services/movie.service';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('MovieListComponent', () => {
   let component: MovieListComponent;
@@ -18,6 +20,7 @@ describe('MovieListComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [MovieListComponent],
       imports: [HttpClientTestingModule, ReactiveFormsModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   });
 
