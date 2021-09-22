@@ -91,9 +91,13 @@
         "test": {
           "builder": "@angular-builders/jest:run",
           "options": {
-            "polyfills": ["src/polyfills.ts"],
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.spec.json",
-            "inlineStyleLanguage": ["scss"],
+            "inlineStyleLanguage": [
+              "scss"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -102,6 +106,37 @@
               "src/styles.scss"
             ],
             "scripts": []
+          }
+        },
+        "cypress-run": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "ngInventory:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "ngInventory:serve:production"
+            }
+          }
+        },
+        "cypress-open": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "watch": true,
+            "headless": false
+          }
+        },
+        "e2e": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "ngInventory:serve",
+            "watch": true,
+            "headless": false
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "ngInventory:serve:production"
+            }
           }
         }
       }
