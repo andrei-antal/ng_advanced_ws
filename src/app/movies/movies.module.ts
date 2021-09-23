@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 import { MovieItemComponent } from './components/movie-item/movie-item.component';
 import { MovieListComponent } from './components/movie-list/movie-list.component';
@@ -11,7 +12,9 @@ import { MovieListStaticComponent } from './components/movie-list-static/movie-l
 import { RatingComponent } from './components/rating/rating.component';
 import { GenreControlComponent } from './components/genre-control/genre-control.component';
 import { WordCountPipe } from './pipes/word-count.pipe';
-import { reducer } from './store/movies.reducer';
+import { MovieState, reducer } from './store/movies.reducer';
+import { MoviesEffects } from './store/movies.effects';
+import { loadMovies } from './store/movies.actions';
 
 @NgModule({
   imports: [
@@ -25,6 +28,7 @@ import { reducer } from './store/movies.reducer';
       { path: ':id', component: MovieDetailComponent },
     ]),
     StoreModule.forFeature('moviesFeature', reducer),
+    EffectsModule.forFeature([MoviesEffects]),
   ],
 
   declarations: [
@@ -37,4 +41,8 @@ import { reducer } from './store/movies.reducer';
     WordCountPipe,
   ],
 })
-export class MoviesModule {}
+export class MoviesModule {
+  constructor(private store: Store<MovieState>) {
+    this.store.dispatch(loadMovies());
+  }
+}
