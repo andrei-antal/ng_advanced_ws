@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 import { map, tap, switchMap } from 'rxjs/operators';
 
@@ -10,6 +11,8 @@ import {
   sciFiGenreYearValidator,
 } from '../../services/movies-validators.service';
 import { Movie } from '../../model/movie';
+import { MovieState } from '../../store/movies.reducer';
+import { addMovie } from '../../store/movies.actions';
 
 @Component({
   selector: 'ngi-movie-detail',
@@ -38,7 +41,8 @@ export class MovieDetailComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private movieService: MovieService
+    private movieService: MovieService,
+    private store: Store<MovieState>
   ) {}
 
   ngOnInit(): void {
@@ -61,7 +65,8 @@ export class MovieDetailComponent implements OnInit {
       ...value,
     };
     if (!this.movieId) {
-      this.movieService.createMovie(modifiedMovie).subscribe(this.goBack);
+      this.store.dispatch(addMovie(modifiedMovie));
+      this.goBack();
     } else {
       this.movieService.updateMovie(modifiedMovie).subscribe(this.goBack);
     }
