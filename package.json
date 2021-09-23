@@ -21,6 +21,7 @@
     "@angular/router": "~12.2.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@ngrx/effects": "^12.4.0",
+    "@ngrx/entity": "^12.4.0",
     "@ngrx/store": "^12.4.0",
     "@ngrx/store-devtools": "^12.4.0",
     "bootstrap": "^5.1.1",

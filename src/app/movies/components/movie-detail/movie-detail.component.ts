@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 
-import { map, tap, switchMap } from 'rxjs/operators';
+import { map, tap, switchMap, first } from 'rxjs/operators';
 
 import { MovieService } from '../../services/movie.service';
 import {
@@ -11,8 +11,8 @@ import {
   sciFiGenreYearValidator,
 } from '../../services/movies-validators.service';
 import { Movie } from '../../model/movie';
-import { MovieState } from '../../store/movies.reducer';
-import { addMovie } from '../../store/movies.actions';
+import { getMovieById, MovieState } from '../../store/movies.reducer';
+import { addMovie, updateMovie } from '../../store/movies.actions';
 
 @Component({
   selector: 'ngi-movie-detail',
@@ -50,11 +50,13 @@ export class MovieDetailComponent implements OnInit {
       .pipe(
         map((paramsMap) => paramsMap.get('id')),
         tap((movieId) => (this.movieId = movieId)),
-        switchMap((movieId) => this.movieService.getMovie(movieId))
+        switchMap((movieId) =>
+          this.store.pipe(select(getMovieById({ movieId })), first())
+        )
       )
       .subscribe((movie) => {
-        this.movie = movie;
-        this.movieForm.patchValue(movie);
+        this.movie = movie!;
+        this.movieForm.patchValue(movie!);
       });
   }
 
@@ -66,10 +68,10 @@ export class MovieDetailComponent implements OnInit {
     };
     if (!this.movieId) {
       this.store.dispatch(addMovie(modifiedMovie));
-      this.goBack();
     } else {
-      this.movieService.updateMovie(modifiedMovie).subscribe(this.goBack);
+      this.store.dispatch(updateMovie(modifiedMovie));
     }
+    this.goBack();
   }
 
   goBack = () => {

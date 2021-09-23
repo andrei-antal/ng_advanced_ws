@@ -1,4 +1,5 @@
 import { createAction, props } from '@ngrx/store';
+import { Update } from '@ngrx/entity';
 import { Movie } from '../model/movie';
 
 export const loadMovies = createAction('[Movies] Load movies');
@@ -14,3 +15,10 @@ export const loadMoviesFail = createAction(
 );
 
 export const addMovie = createAction('[Movie] Add movie', props<Movie>());
+
+export const updateMovie = createAction('[Movie] Update Movie', props<Movie>());
+
+export const updateMovieSuccess = createAction(
+  '[Movie] Update Movie Success',
+  props<Update<Movie>>()
+);
