@@ -11,6 +11,7 @@ import { MovieListStaticComponent } from './components/movie-list-static/movie-l
 import { RatingComponent } from './components/rating/rating.component';
 import { GenreControlComponent } from './components/genre-control/genre-control.component';
 import { WordCountPipe } from './pipes/word-count.pipe';
+import { reducer } from './store/movies.reducer';
 
 @NgModule({
   imports: [
@@ -23,7 +24,7 @@ import { WordCountPipe } from './pipes/word-count.pipe';
       { path: 'new', component: MovieDetailComponent },
       { path: ':id', component: MovieDetailComponent },
     ]),
-    StoreModule.forFeature('moviesFeature', {}),
+    StoreModule.forFeature('moviesFeature', reducer),
   ],
 
   declarations: [
