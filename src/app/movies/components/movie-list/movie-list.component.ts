@@ -21,12 +21,7 @@ export class MovieListComponent implements OnInit {
   constructor(private store: Store<MovieState>) {}
 
   public ngOnInit(): void {
-    this.movies$ = this.store.pipe(
-      select(getAllMovies),
-      tap((state) => {
-        console.log(state);
-      })
-    );
+    this.movies$ = this.store.pipe(select(getAllMovies));
     // this.movies$ = this.searchField.valueChanges.pipe(
     //   debounceTime(300),
     //   startWith(undefined),

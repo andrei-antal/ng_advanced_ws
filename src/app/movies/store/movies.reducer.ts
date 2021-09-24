@@ -21,7 +21,7 @@ export interface MovieState {
   error: any;
 }
 
-const initialState: MovieState = {
+export const initialState: MovieState = {
   movies: initialEntityState,
   loading: false,
   error: undefined,
