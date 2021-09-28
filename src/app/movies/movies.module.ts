@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
 
 import { MovieItemComponent } from './components/movie-item/movie-item.component';
 import { MovieListComponent } from './components/movie-list/movie-list.component';
@@ -22,6 +23,7 @@ import { WordCountPipe } from './pipes/word-count.pipe';
       { path: 'new', component: MovieDetailComponent },
       { path: ':id', component: MovieDetailComponent },
     ]),
+    StoreModule.forFeature('moviesFeature', {}),
   ],
 
   declarations: [

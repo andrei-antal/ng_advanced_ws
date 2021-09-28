@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
@@ -22,6 +23,7 @@ import { HomeComponent } from './home/home.component';
           import('./movies/movies.module').then((m) => m.MoviesModule),
       },
     ]),
+    StoreModule.forRoot({}, {}),
   ],
   providers: [],
   bootstrap: [AppComponent],
